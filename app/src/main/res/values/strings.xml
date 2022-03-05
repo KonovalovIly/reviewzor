@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Reviewzor</string>
+    <string name="log_in">LOG IN</string>
+    <string name="register">REGISTER</string>
 </resources>
