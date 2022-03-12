@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_startScreen_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_startScreen_to_mainContainerFragment"
+            app:destination="@id/mainContainerFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
