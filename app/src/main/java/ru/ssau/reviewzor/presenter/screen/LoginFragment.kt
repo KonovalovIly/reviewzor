@@ -20,7 +20,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
     private fun setNavigation() {
         binding.button.setOnClickListener {
             findNavController().navigate(
-                LoginFragmentDirections.actionLoginFragmentToMapsFragment()
+                LoginFragmentDirections.actionLoginFragmentToMainContainerFragment()
             )
         }
     }

@@ -20,7 +20,7 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>() {
     private fun setNavigation() {
         binding.button.setOnClickListener {
             findNavController().navigate(
-                RegisterFragmentDirections.actionRegisterFragmentToMapsFragment()
+                RegisterFragmentDirections.actionRegisterFragmentToMainContainerFragment()
             )
         }
     }

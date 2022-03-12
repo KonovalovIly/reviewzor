@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.location.*
@@ -29,12 +30,17 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
         setStartMap()
         setupLocationClient()
+    }
 
+    private fun setupOnPlaceClick() {
+        map.setOnPoiClickListener {
+            Toast.makeText(requireContext(), it.name, Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun setStartMap() {
         val mapFragment =
-            childFragmentManager.findFragmentById(binding.map.id) as SupportMapFragment
+            childFragmentManager.findFragmentById(binding.mapFragment.id) as SupportMapFragment
         mapFragment.getMapAsync(this)
     }
 
@@ -52,6 +58,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(), OnMapReadyCallback {
 
     override fun onMapReady(p0: GoogleMap) {
         map = p0
+        setupOnPlaceClick()
         requireActivity().lifecycleScope.launchWhenCreated {
             getCurrentLocation()
         }

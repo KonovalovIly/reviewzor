@@ -1,7 +1,6 @@
 package ru.ssau.reviewzor.presenter.screen
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.navigation.fragment.findNavController
@@ -27,7 +26,6 @@ class StartScreen : BaseFragment<FragmentStartScreenBinding>() {
         }
 
         binding.register.setOnClickListener {
-            Log.d("REGISTER", "i`m here")
             findNavController().navigate(
                 StartScreenDirections.actionStartScreenToRegisterFragment()
             )

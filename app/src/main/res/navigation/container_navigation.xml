@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container_navigation"
+    app:startDestination="@id/mapsFragment">
+
+    <fragment
+        android:id="@+id/mapsFragment"
+        android:name="ru.ssau.reviewzor.presenter.screen.MapsFragment"
+        android:label="fragment_maps"
+        tools:layout="@layout/fragment_maps" >
+        <action
+            android:id="@+id/action_mapsFragment_to_placeDetailFragment"
+            app:destination="@id/placeDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/listPlacesFragment"
+        android:name="ru.ssau.reviewzor.presenter.screen.ListPlacesFragment"
+        android:label="ListPlacesFragment" >
+        <action
+            android:id="@+id/action_listPlacesFragment_to_placeDetailFragment"
+            app:destination="@id/placeDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="ru.ssau.reviewzor.presenter.screen.ProfileFragment"
+        android:label="ProfileFragment" >
+        <action
+            android:id="@+id/action_profileFragment_to_placeDetailFragment"
+            app:destination="@id/placeDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/placeDetailFragment"
+        android:name="ru.ssau.reviewzor.presenter.screen.PlaceDetailFragment"
+        android:label="PlaceDetailFragment" />
+</navigation>
