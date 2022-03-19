@@ -6,22 +6,34 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.lifecycle.lifecycleScope
-import com.google.android.gms.location.*
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.PointOfInterest
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.net.PlacesClient
+import ru.ssau.reviewzor.R
 import ru.ssau.reviewzor.databinding.FragmentMapsBinding
+import ru.ssau.reviewzor.presenter.adapter.BookmarkInfoWindowAdapter
 import ru.ssau.reviewzor.presenter.base.BaseFragment
+import ru.ssau.reviewzor.presenter.viewModel.MapViewModel
 
 class MapsFragment : BaseFragment<FragmentMapsBinding>(), OnMapReadyCallback {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var map: GoogleMap
+    private lateinit var placesClient: PlacesClient
+
+    private val mapsViewModel by viewModel<MapViewModel>()
 
     override fun initBinding(inflater: LayoutInflater): FragmentMapsBinding =
         FragmentMapsBinding.inflate(layoutInflater)
@@ -30,11 +42,13 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
         setStartMap()
         setupLocationClient()
+        setupPlacesClient()
     }
 
     private fun setupOnPlaceClick() {
         map.setOnPoiClickListener {
-            Toast.makeText(requireContext(), it.name, Toast.LENGTH_LONG).show()
+            Log.d(TAG, it.name + it.latLng + it.placeId)
+            displayPoiDisplayStep(it)
         }
     }
 
@@ -46,6 +60,11 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(), OnMapReadyCallback {
 
     private fun setupLocationClient() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+    }
+
+    private fun setupPlacesClient() {
+        Places.initialize(requireContext(), getString(R.string.key_api))
+        placesClient = Places.createClient(requireContext())
     }
 
     private fun requestLocationPermissions() {
@@ -64,7 +83,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(), OnMapReadyCallback {
         }
     }
 
-    private suspend fun getCurrentLocation() {
+    private fun getCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -100,6 +119,28 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(), OnMapReadyCallback {
                 Log.e(TAG, "Location permission denied")
             }
         }
+    }
+
+    private fun displayPoiDisplayStep(point: PointOfInterest) {
+        map.setInfoWindowAdapter(BookmarkInfoWindowAdapter(requireActivity()))
+
+        val marker = map.addMarker(
+            MarkerOptions()
+                .position(point.latLng)
+                .title(point.name)
+        )
+        marker?.tag = R.drawable.bm
+
+        map.setOnInfoWindowClickListener {
+            handleInfoWindowClick(point, it)
+        }
+    }
+
+    private fun handleInfoWindowClick(point: PointOfInterest, marker: Marker) {
+        lifecycleScope.launchWhenCreated {
+            mapsViewModel.addBookmarkFromPlace(point)
+        }
+        marker.remove()
     }
 
     companion object {
