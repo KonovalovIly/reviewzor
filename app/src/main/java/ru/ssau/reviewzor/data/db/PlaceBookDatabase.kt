@@ -1,12 +1,15 @@
 package ru.ssau.reviewzor.data.db
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import ru.ssau.reviewzor.domain.entity.PlacesModel
 
-@Database(entities = [PlacesModel::class], version = 1)
+@Database(
+    entities = [PlacesModel::class], version = 2,
+)
 abstract class PlaceBookDatabase : RoomDatabase() {
 
     abstract fun bookmarkDao(): BookmarkDao
@@ -21,7 +24,8 @@ abstract class PlaceBookDatabase : RoomDatabase() {
                 instance = Room.databaseBuilder(
                     context.applicationContext,
                     PlaceBookDatabase::class.java,
-                    "PlaceBook").build()
+                    "PlaceBook"
+                ).fallbackToDestructiveMigration().build()
             }
 
             return instance as PlaceBookDatabase

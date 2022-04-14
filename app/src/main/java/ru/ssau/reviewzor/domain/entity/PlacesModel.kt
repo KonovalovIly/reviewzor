@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class PlacesModel(
-    @PrimaryKey(autoGenerate = true) var id: Long? = null,
+    @PrimaryKey var id: String = "",
     var name: String = "",
     val category: String = "",
     val follow: Boolean = false,

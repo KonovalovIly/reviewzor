@@ -10,6 +10,8 @@ import ru.ssau.reviewzor.domain.entity.PlacesModel
 class PlaceItemAdapter :
     ListAdapter<PlacesModel, PlaceItemAdapter.PlaceItemViewHolder>(PlacesModelDiffCallback()) {
 
+    var onClick: ((placeName: String) -> Unit)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaceItemViewHolder =
         PlaceItemViewHolder(
             PlaceItemBinding.inflate(
@@ -29,11 +31,15 @@ class PlaceItemAdapter :
         private val tvPlaceTitle = binding.placeTitle
         private val tvPlaceRating = binding.placeRating
         private val cbFollow = binding.checkBox
+        private val card = binding.cardView
 
         fun bind(item: PlacesModel) {
             tvPlaceRating.text = item.rating.toString()
             tvPlaceTitle.text = item.name
             cbFollow.isChecked = item.follow
+            card.setOnClickListener{
+                onClick?.invoke(item.id)
+            }
         }
     }
 }

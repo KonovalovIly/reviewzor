@@ -12,11 +12,11 @@ interface BookmarkDao {
     @Query("SELECT * FROM PlacesModel")
     fun loadAll(): LiveData<List<PlacesModel>>
 
-    @Query("SELECT * FROM PlacesModel WHERE id = :bookmarkId")
-    suspend fun loadBookmark(bookmarkId: Long): PlacesModel
+    @Query("SELECT * FROM PlacesModel WHERE id = :placeId")
+    suspend fun loadBookmark(placeId: String): PlacesModel
 
-    @Query("SELECT * FROM PlacesModel WHERE id = :bookmarkId")
-    fun loadLiveBookmark(bookmarkId: Long): LiveData<PlacesModel>
+    @Query("SELECT * FROM PlacesModel WHERE id = :placeId")
+    fun loadLiveBookmark(placeId: String): LiveData<PlacesModel>
 
     @Insert(onConflict = IGNORE)
     suspend fun insertBookmark(bookmark: PlacesModel): Long
@@ -26,4 +26,7 @@ interface BookmarkDao {
 
     @Delete
     suspend fun deleteBookmark(bookmark: PlacesModel)
+
+    @Query("SELECT EXISTS (SELECT * FROM PlacesModel WHERE id = :placeId)")
+    suspend fun contains(placeId: String): Boolean
 }

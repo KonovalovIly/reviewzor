@@ -33,5 +33,9 @@
     <fragment
         android:id="@+id/placeDetailFragment"
         android:name="ru.ssau.reviewzor.presenter.screen.PlaceDetailFragment"
-        android:label="PlaceDetailFragment" />
+        android:label="PlaceDetailFragment" >
+        <argument
+            android:name="name"
+            app:argType="string" />
+    </fragment>
 </navigation>

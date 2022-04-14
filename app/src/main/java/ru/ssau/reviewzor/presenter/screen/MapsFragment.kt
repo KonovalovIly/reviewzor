@@ -9,6 +9,7 @@ import android.view.View
 import androidx.core.app.ActivityCompat
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -95,7 +96,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(), OnMapReadyCallback {
             fusedLocationClient.lastLocation.addOnCompleteListener {
                 val location = it.result
                 if (location != null) {
-                    val locationLongLat = LatLng(location.latitude, location.latitude)
+                    val locationLongLat = LatLng(location.latitude, location.longitude)
                     val update = CameraUpdateFactory.newLatLngZoom(locationLongLat, 16.0F)
                     map.moveCamera(update)
                 } else {
@@ -132,15 +133,18 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(), OnMapReadyCallback {
         marker?.tag = R.drawable.bm
 
         map.setOnInfoWindowClickListener {
-            handleInfoWindowClick(point, it)
+            handleInfoWindowClick(point)
+            marker?.remove()
         }
     }
 
-    private fun handleInfoWindowClick(point: PointOfInterest, marker: Marker) {
+    private fun handleInfoWindowClick(point: PointOfInterest) {
         lifecycleScope.launchWhenCreated {
             mapsViewModel.addBookmarkFromPlace(point)
+            findNavController().navigate(
+                MapsFragmentDirections.actionMapsFragmentToPlaceDetailFragment(point.placeId)
+            )
         }
-        marker.remove()
     }
 
     companion object {

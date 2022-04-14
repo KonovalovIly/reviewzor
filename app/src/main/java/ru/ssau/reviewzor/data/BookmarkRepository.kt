@@ -7,15 +7,19 @@ import ru.ssau.reviewzor.domain.entity.PlacesModel
 
 class BookmarkRepository(private val db: PlaceBookDatabase) {
 
-    suspend fun addBookmark(placesModel: PlacesModel): Long {
-        val newId =  db.bookmarkDao().insertBookmark(placesModel)
-        placesModel.id = newId
-        return newId
+    suspend fun addBookmark(placesModel: PlacesModel) {
+        if (!db.bookmarkDao().contains(placesModel.id)) {
+            db.bookmarkDao().insertBookmark(placesModel)
+        }
     }
+
+    suspend fun getNotes(placeId: String) = db.bookmarkDao().loadBookmark(placeId)
 
     fun createBookmark(): PlacesModel {
         return PlacesModel()
     }
+
+    suspend fun updateBookmark(place: PlacesModel) = db.bookmarkDao().updateBookmark(place)
 
     val allBookmarks: LiveData<List<PlacesModel>>
         get() {

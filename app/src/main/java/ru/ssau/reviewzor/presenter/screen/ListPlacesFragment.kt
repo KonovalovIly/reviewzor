@@ -3,6 +3,7 @@ package ru.ssau.reviewzor.presenter.screen
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.ssau.reviewzor.databinding.FragmentListPlacesBinding
@@ -34,6 +35,11 @@ class ListPlacesFragment : BaseFragment<FragmentListPlacesBinding>() {
     private fun setAdapter() {
         binding.rvPlaces.adapter = adapter
         binding.rvPlaces.layoutManager = LinearLayoutManager(this.context)
+        adapter.onClick = {
+            findNavController().navigate(
+                ListPlacesFragmentDirections.actionListPlacesFragmentToPlaceDetailFragment(it)
+            )
+        }
     }
 
 }
