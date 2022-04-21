@@ -5,6 +5,7 @@ import org.koin.dsl.module
 import ru.ssau.reviewzor.presenter.viewModel.DetailViewModel
 import ru.ssau.reviewzor.presenter.viewModel.ListViewModel
 import ru.ssau.reviewzor.presenter.viewModel.MapViewModel
+import ru.ssau.reviewzor.presenter.viewModel.ProfileViewModel
 
 val appModule = module {
 
@@ -18,5 +19,9 @@ val appModule = module {
 
     viewModel {
         DetailViewModel(repository = get())
+    }
+
+    viewModel {
+        ProfileViewModel(repository = get())
     }
 }

@@ -15,7 +15,7 @@ class ListPlacesFragment : BaseFragment<FragmentListPlacesBinding>() {
 
     private val listViewModel by viewModel<ListViewModel>()
 
-    private val adapter: PlaceItemAdapter = PlaceItemAdapter()
+    private val adapter: PlaceItemAdapter by lazy{ PlaceItemAdapter(requireContext()) }
 
     override fun initBinding(inflater: LayoutInflater): FragmentListPlacesBinding =
         FragmentListPlacesBinding.inflate(inflater)

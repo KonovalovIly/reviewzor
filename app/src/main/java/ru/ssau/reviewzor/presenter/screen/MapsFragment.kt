@@ -3,6 +3,7 @@ package ru.ssau.reviewzor.presenter.screen
 import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Geocoder
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -19,12 +21,14 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.PlacesClient
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.ssau.reviewzor.R
 import ru.ssau.reviewzor.databinding.FragmentMapsBinding
+import ru.ssau.reviewzor.decodeUriStreamToSize
 import ru.ssau.reviewzor.presenter.adapter.BookmarkInfoWindowAdapter
 import ru.ssau.reviewzor.presenter.base.BaseFragment
 import ru.ssau.reviewzor.presenter.viewModel.MapViewModel
@@ -38,6 +42,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(), OnMapReadyCallback {
 
     private val mapsViewModel by viewModel<MapViewModel>()
     private val geocoder: Geocoder by lazy { Geocoder(requireContext(), Locale.getDefault()) }
+    private var marker: Marker? = null
 
     override fun initBinding(inflater: LayoutInflater): FragmentMapsBinding =
         FragmentMapsBinding.inflate(layoutInflater)
@@ -136,7 +141,8 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(), OnMapReadyCallback {
     }
 
     private fun displayMarker(id: String, name: String, latLng: LatLng, address: String) {
-        val marker = map.addMarker(
+        marker?.remove()
+        marker = map.addMarker(
             MarkerOptions()
                 .position(latLng)
                 .title(name)
@@ -144,6 +150,9 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(), OnMapReadyCallback {
         val image = mapsViewModel.getImage(id)
         if (image == null || image.isEmpty()) {
             marker?.tag = R.drawable.no_product
+        } else {
+            val bitmap = getImageWithAuthority(image.toUri())
+            marker?.tag = bitmap
         }
 
         map.setOnInfoWindowClickListener {
@@ -151,6 +160,9 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(), OnMapReadyCallback {
             marker?.remove()
         }
     }
+
+    private fun getImageWithAuthority(uri: Uri) =
+        decodeUriStreamToSize(uri, 200, 100, requireContext())
 
     private fun handleInfoWindowClick(id: String, name: String, latLng: LatLng, address: String) {
         lifecycleScope.launchWhenCreated {

@@ -1,13 +1,18 @@
 package ru.ssau.reviewzor.presenter.adapter
 
+import android.content.Context
+import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.ssau.reviewzor.databinding.PlaceItemBinding
+import ru.ssau.reviewzor.decodeUriStreamToSize
 import ru.ssau.reviewzor.domain.entity.PlacesModel
 
-class PlaceItemAdapter :
+class PlaceItemAdapter(private val context: Context) :
     ListAdapter<PlacesModel, PlaceItemAdapter.PlaceItemViewHolder>(PlacesModelDiffCallback()) {
 
     var onClick: ((placeName: String) -> Unit)? = null
@@ -33,12 +38,13 @@ class PlaceItemAdapter :
         private val tvPlaceRating = binding.placeRating
         private val cbFollow = binding.checkBox
         private val card = binding.cardView
+        private val imageView = binding.imageView
 
         fun bind(item: PlacesModel) {
             tvPlaceRating.text = item.rating.toString()
             tvPlaceTitle.text = item.name
             cbFollow.isChecked = item.follow
-            card.setOnClickListener{
+            card.setOnClickListener {
                 onClick?.invoke(item.id)
             }
             cbFollow.setOnClickListener {
@@ -56,6 +62,15 @@ class PlaceItemAdapter :
                 )
                 onFollow?.invoke(model)
             }
+            Log.d("Logger", item.image.isNotEmpty().toString())
+            if (item.image.isNotEmpty()) {
+                val bitmap = getImageWithAuthority(item.image.toUri())
+                imageView.setImageBitmap(bitmap)
+            }
         }
+
+        private fun getImageWithAuthority(uri: Uri) =
+            decodeUriStreamToSize(uri, 200, 100, context)
     }
+
 }

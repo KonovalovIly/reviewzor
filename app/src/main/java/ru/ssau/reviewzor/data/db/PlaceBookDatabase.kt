@@ -6,9 +6,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import ru.ssau.reviewzor.domain.entity.PlacesModel
+import ru.ssau.reviewzor.domain.entity.ProfileModel
 
 @Database(
-    entities = [PlacesModel::class], version = 3,
+    entities = [PlacesModel::class, ProfileModel::class], version = 5,
 )
 abstract class PlaceBookDatabase : RoomDatabase() {
 

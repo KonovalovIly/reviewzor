@@ -7,7 +7,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Marker
 import ru.ssau.reviewzor.databinding.ContentBookmarkInfoBinding
 
-class BookmarkInfoWindowAdapter(context: Activity) : GoogleMap.InfoWindowAdapter{
+class BookmarkInfoWindowAdapter(context: Activity) : GoogleMap.InfoWindowAdapter {
 
     private val binding = ContentBookmarkInfoBinding.inflate(context.layoutInflater)
 
@@ -15,7 +15,11 @@ class BookmarkInfoWindowAdapter(context: Activity) : GoogleMap.InfoWindowAdapter
         binding.placeTitle.text = marker.title ?: ""
         binding.placeRating.text = marker.snippet ?: ""
         val imageView = binding.imageView
-        imageView.setImageResource((marker.tag as Int))
+        if (marker.tag is Int) {
+            imageView.setImageResource((marker.tag as Int))
+        } else {
+            imageView.setImageBitmap(marker.tag as Bitmap)
+        }
         return binding.root
     }
 

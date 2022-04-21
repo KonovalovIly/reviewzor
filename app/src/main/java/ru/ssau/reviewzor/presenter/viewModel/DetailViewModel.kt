@@ -43,10 +43,41 @@ class DetailViewModel(private val repository: BookmarkRepository) : ViewModel() 
                         longitude = bookmark.longitude,
                         follow = bookmark.follow,
                         detail = detail,
-                        rating = rating
+                        rating = rating,
+                        image = bookmark.image
                     )
                 )
             }
         }
     }
+
+    fun update(
+        name: String,
+        address: String,
+        category: String,
+        detail: String,
+        rating: Double,
+        image: String
+    ) {
+        val bookmark = _bookmark.value
+        if (bookmark != null) {
+            viewModelScope.launch {
+                repository.updateBookmark(
+                    PlacesModel(
+                        id = bookmark.id,
+                        name = name,
+                        address = address,
+                        category = category,
+                        latitude = bookmark.latitude,
+                        longitude = bookmark.longitude,
+                        follow = bookmark.follow,
+                        detail = detail,
+                        rating = rating,
+                        image = image
+                    )
+                )
+            }
+        }
+    }
+
 }

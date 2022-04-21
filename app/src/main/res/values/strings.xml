@@ -13,11 +13,14 @@
     <string name="address">Address:</string>
     <string name="category">Category:</string>
     <string name="name">Name:</string>
-    <string name="rating">Rating</string>
+    <string name="rating">Rating:</string>
+    <string name="secondName">Second name:</string>
+    <string name="favoritePlaces">Favorite place:</string>
 
     <string-array name="categories">
         <item>Shop</item>
         <item>Restaurant</item>
         <item>Hotel</item>
+        <item>Other</item>
     </string-array>
 </resources>
