@@ -1,7 +1,6 @@
 package ru.ssau.reviewzor.presenter.screen
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.navigation.fragment.navArgs
@@ -9,7 +8,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.ssau.reviewzor.databinding.FragmentPlaceDetailBinding
 import ru.ssau.reviewzor.presenter.base.BaseFragment
 import ru.ssau.reviewzor.presenter.viewModel.DetailViewModel
-import ru.ssau.reviewzor.presenter.viewModel.ListViewModel
 
 class PlaceDetailFragment : BaseFragment<FragmentPlaceDetailBinding>() {
 
@@ -32,6 +30,7 @@ class PlaceDetailFragment : BaseFragment<FragmentPlaceDetailBinding>() {
                 editTextName.setText(it.name)
                 editTextAddress.setText(it.address)
                 editTextTextDetail.setText(it.detail)
+                editRating.setText(it.rating.toString())
             }
         }
     }
@@ -45,7 +44,7 @@ class PlaceDetailFragment : BaseFragment<FragmentPlaceDetailBinding>() {
                     address = binding.editTextAddress.text.toString(),
                     detail = binding.editTextTextDetail.text.toString(),
                     category = "",
-                    rating = 1.0
+                    rating = binding.editRating.text.toString().toDouble(),
                 )
             }
         }

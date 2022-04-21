@@ -13,5 +13,6 @@ data class PlacesModel(
     var latitude: Double = 0.0,
     var longitude: Double = 0.0,
     val detail: String = "",
-    val rating: Double = 0.0
+    val rating: Double = 0.0,
+    val image: String = "",
 )

@@ -11,6 +11,7 @@ class PlaceItemAdapter :
     ListAdapter<PlacesModel, PlaceItemAdapter.PlaceItemViewHolder>(PlacesModelDiffCallback()) {
 
     var onClick: ((placeName: String) -> Unit)? = null
+    var onFollow: ((placeName: PlacesModel) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaceItemViewHolder =
         PlaceItemViewHolder(
@@ -39,6 +40,21 @@ class PlaceItemAdapter :
             cbFollow.isChecked = item.follow
             card.setOnClickListener{
                 onClick?.invoke(item.id)
+            }
+            cbFollow.setOnClickListener {
+                val model = PlacesModel(
+                    id = item.id,
+                    name = item.name,
+                    category = item.category,
+                    follow = cbFollow.isChecked,
+                    address = item.address,
+                    latitude = item.latitude,
+                    longitude = item.longitude,
+                    detail = item.detail,
+                    rating = item.rating,
+                    image = item.image
+                )
+                onFollow?.invoke(model)
             }
         }
     }

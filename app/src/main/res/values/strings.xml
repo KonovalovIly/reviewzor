@@ -13,6 +13,7 @@
     <string name="address">Address:</string>
     <string name="category">Category:</string>
     <string name="name">Name:</string>
+    <string name="rating">Rating</string>
 
     <string-array name="categories">
         <item>Shop</item>

@@ -2,12 +2,14 @@ package ru.ssau.reviewzor.presenter.screen
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.location.Geocoder
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -17,16 +19,16 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.PointOfInterest
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.PlacesClient
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.ssau.reviewzor.R
 import ru.ssau.reviewzor.databinding.FragmentMapsBinding
 import ru.ssau.reviewzor.presenter.adapter.BookmarkInfoWindowAdapter
 import ru.ssau.reviewzor.presenter.base.BaseFragment
 import ru.ssau.reviewzor.presenter.viewModel.MapViewModel
+import java.util.*
 
 class MapsFragment : BaseFragment<FragmentMapsBinding>(), OnMapReadyCallback {
 
@@ -35,6 +37,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(), OnMapReadyCallback {
     private lateinit var placesClient: PlacesClient
 
     private val mapsViewModel by viewModel<MapViewModel>()
+    private val geocoder: Geocoder by lazy { Geocoder(requireContext(), Locale.getDefault()) }
 
     override fun initBinding(inflater: LayoutInflater): FragmentMapsBinding =
         FragmentMapsBinding.inflate(layoutInflater)
@@ -46,10 +49,29 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(), OnMapReadyCallback {
         setupPlacesClient()
     }
 
-    private fun setupOnPlaceClick() {
-        map.setOnPoiClickListener {
-            Log.d(TAG, it.name + it.latLng + it.placeId)
-            displayPoiDisplayStep(it)
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onMapReady(p0: GoogleMap) {
+        map = p0
+        setupOnPlaceClick()
+        requireActivity().lifecycleScope.launchWhenCreated {
+            getCurrentLocation()
+        }
+        map.setInfoWindowAdapter(BookmarkInfoWindowAdapter(requireActivity()))
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == REQUEST_LOCATION) {
+            if (grantResults.size == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                requireActivity().lifecycleScope.launchWhenCreated {
+                    getCurrentLocation()
+                }
+            } else {
+                Log.e(TAG, "Location permission denied")
+            }
         }
     }
 
@@ -76,14 +98,6 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(), OnMapReadyCallback {
         )
     }
 
-    override fun onMapReady(p0: GoogleMap) {
-        map = p0
-        setupOnPlaceClick()
-        requireActivity().lifecycleScope.launchWhenCreated {
-            getCurrentLocation()
-        }
-    }
-
     private fun getCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
@@ -106,43 +120,43 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(), OnMapReadyCallback {
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        if (requestCode == REQUEST_LOCATION) {
-            if (grantResults.size == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                requireActivity().lifecycleScope.launchWhenCreated {
-                    getCurrentLocation()
-                }
-            } else {
-                Log.e(TAG, "Location permission denied")
-            }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setupOnPlaceClick() {
+        map.setOnMapClickListener {
+            val address = geocoder.getFromLocation(it.latitude, it.longitude, REQUEST_LOCATION)
+            val addressString = "${address[0].thoroughfare} ${address[0].subThoroughfare}"
+            val id = Base64.getEncoder().encodeToString(it.toString().toByteArray())
+            displayMarker(id, "", it, addressString)
+        }
+        map.setOnPoiClickListener {
+            val address = geocoder.getFromLocation(it.latLng.latitude, it.latLng.longitude, REQUEST_LOCATION)
+            val addressString = "${address[0].thoroughfare} ${address[0].subThoroughfare}"
+            displayMarker(it.placeId, it.name, it.latLng, addressString)
         }
     }
 
-    private fun displayPoiDisplayStep(point: PointOfInterest) {
-        map.setInfoWindowAdapter(BookmarkInfoWindowAdapter(requireActivity()))
-
+    private fun displayMarker(id: String, name: String, latLng: LatLng, address: String) {
         val marker = map.addMarker(
             MarkerOptions()
-                .position(point.latLng)
-                .title(point.name)
+                .position(latLng)
+                .title(name)
         )
-        marker?.tag = R.drawable.bm
+        val image = mapsViewModel.getImage(id)
+        if (image == null || image.isEmpty()) {
+            marker?.tag = R.drawable.no_product
+        }
 
         map.setOnInfoWindowClickListener {
-            handleInfoWindowClick(point)
+            handleInfoWindowClick(id, name, latLng, address)
             marker?.remove()
         }
     }
 
-    private fun handleInfoWindowClick(point: PointOfInterest) {
+    private fun handleInfoWindowClick(id: String, name: String, latLng: LatLng, address: String) {
         lifecycleScope.launchWhenCreated {
-            mapsViewModel.addBookmarkFromPlace(point)
+            mapsViewModel.addBookmarkFromPlace(id, name, latLng, address)
             findNavController().navigate(
-                MapsFragmentDirections.actionMapsFragmentToPlaceDetailFragment(point.placeId)
+                MapsFragmentDirections.actionMapsFragmentToPlaceDetailFragment(id)
             )
         }
     }

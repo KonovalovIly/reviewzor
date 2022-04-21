@@ -13,7 +13,7 @@ interface BookmarkDao {
     fun loadAll(): LiveData<List<PlacesModel>>
 
     @Query("SELECT * FROM PlacesModel WHERE id = :placeId")
-    suspend fun loadBookmark(placeId: String): PlacesModel
+    suspend fun loadBookmark(placeId: String): PlacesModel?
 
     @Query("SELECT * FROM PlacesModel WHERE id = :placeId")
     fun loadLiveBookmark(placeId: String): LiveData<PlacesModel>

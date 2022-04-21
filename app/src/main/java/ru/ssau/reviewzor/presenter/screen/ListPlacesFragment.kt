@@ -27,7 +27,7 @@ class ListPlacesFragment : BaseFragment<FragmentListPlacesBinding>() {
     }
 
     private fun setObserver() {
-        listViewModel.listPlaces.observe(viewLifecycleOwner){
+        listViewModel.listPlaces.observe(viewLifecycleOwner) {
             adapter.submitList(it)
         }
     }
@@ -35,6 +35,9 @@ class ListPlacesFragment : BaseFragment<FragmentListPlacesBinding>() {
     private fun setAdapter() {
         binding.rvPlaces.adapter = adapter
         binding.rvPlaces.layoutManager = LinearLayoutManager(this.context)
+        adapter.onFollow = {
+            listViewModel.update(it)
+        }
         adapter.onClick = {
             findNavController().navigate(
                 ListPlacesFragmentDirections.actionListPlacesFragmentToPlaceDetailFragment(it)
