@@ -7,12 +7,11 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.core.net.toUri
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.ssau.reviewzor.*
@@ -74,13 +73,16 @@ class PlaceDetailFragment : BaseFragment<FragmentPlaceDetailBinding>(),
             edit.setOnClickListener {
                 val bookplace = detailViewModel.bookmark.value
                 if (bookplace != null) {
+                    val rating = editRating.text.toString().toDouble()
+                    val rat = if (rating > 5.0) 5.0 else rating
+                    val r = if (rat < -5.0) -5.0 else rat
                     if (photoPath != null) {
                         detailViewModel.update(
                             name = editTextName.text.toString(),
                             address = editTextAddress.text.toString(),
                             detail = editTextTextDetail.text.toString(),
                             category = spinner.selectedItem.toString(),
-                            rating = editRating.text.toString().toDouble(),
+                            rating = r,
                             image = photoPath!!
                         )
                     } else {
@@ -89,10 +91,11 @@ class PlaceDetailFragment : BaseFragment<FragmentPlaceDetailBinding>(),
                             address = editTextAddress.text.toString(),
                             detail = editTextTextDetail.text.toString(),
                             category = spinner.selectedItem.toString(),
-                            rating = editRating.text.toString().toDouble(),
+                            rating = r,
                         )
                     }
                 }
+                findNavController().popBackStack()
             }
         }
     }
@@ -101,9 +104,13 @@ class PlaceDetailFragment : BaseFragment<FragmentPlaceDetailBinding>(),
     private fun category(category: String): Int {
         return when (category) {
             "Shop" -> 0
+            "Магазин" -> 0
             "Restaurant" -> 1
+            "Ресторан" -> 1
             "Hotel" -> 2
+            "Отель" -> 2
             "Other" -> 3
+            "Другое" -> 3
             else -> 0
         }
     }

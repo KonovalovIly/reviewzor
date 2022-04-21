@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Reviewzor</string>
+    <string name="log_in">ВХОД</string>
+    <string name="register">РЕГИСТРАЦИЯ</string>
+    <string name="login_title">Вход</string>
+    <string name="register_title">Регистрация</string>
+    <string name="register_next_bnt_text">Дальше</string>
+    <string name="list">Список</string>
+    <string name="map">Карта</string>
+    <string name="profile">Профиль</string>
+    <string name="detail">Детали:</string>
+    <string name="address">Адрес:</string>
+    <string name="category">Категория:</string>
+    <string name="name">Название:</string>
+    <string name="rating">Рейтинг:</string>
+    <string name="secondName">Фамилия:</string>
+    <string name="favoritePlaces">Любимые места:</string>
+    <string name="profileName">Имя:</string>
+
+    <string-array name="categories">
+        <item>Магазин</item>
+        <item>Ресторан</item>
+        <item>Отель</item>
+        <item>Другое</item>
+    </string-array>
+</resources>
