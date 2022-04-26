@@ -3,6 +3,7 @@ package ru.ssau.reviewzor.presenter.adapter
 import android.app.Activity
 import android.graphics.Bitmap
 import android.view.View
+import coil.load
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Marker
 import ru.ssau.reviewzor.databinding.ContentBookmarkInfoBinding
@@ -18,7 +19,7 @@ class BookmarkInfoWindowAdapter(context: Activity) : GoogleMap.InfoWindowAdapter
         if (marker.tag is Int) {
             imageView.setImageResource((marker.tag as Int))
         } else {
-            imageView.setImageBitmap(marker.tag as Bitmap)
+            imageView.load((marker.tag as String))
         }
         return binding.root
     }

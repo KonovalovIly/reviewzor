@@ -20,7 +20,7 @@ val appModule = module {
     }
 
     viewModel {
-        ProfileViewModel(repository = get(), tokenRepository = get())
+        ProfileViewModel(repository = get(), tokenRepository = get(), networkRepository = get())
     }
 
     viewModel {

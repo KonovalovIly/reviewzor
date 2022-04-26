@@ -134,7 +134,8 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(), OnMapReadyCallback {
             displayMarker(id, "", it, addressString)
         }
         map.setOnPoiClickListener {
-            val address = geocoder.getFromLocation(it.latLng.latitude, it.latLng.longitude, REQUEST_LOCATION)
+            val address =
+                geocoder.getFromLocation(it.latLng.latitude, it.latLng.longitude, REQUEST_LOCATION)
             val addressString = "${address[0].thoroughfare} ${address[0].subThoroughfare}"
             displayMarker(it.placeId, it.name, it.latLng, addressString)
         }
@@ -151,8 +152,8 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(), OnMapReadyCallback {
         if (image == null || image.isEmpty()) {
             marker?.tag = R.drawable.no_product
         } else {
-            val bitmap = getImageWithAuthority(image.toUri())
-            marker?.tag = bitmap
+            Log.d("Logger", image)
+            marker?.tag = image
         }
 
         map.setOnInfoWindowClickListener {
@@ -160,9 +161,6 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(), OnMapReadyCallback {
             marker?.remove()
         }
     }
-
-    private fun getImageWithAuthority(uri: Uri) =
-        decodeUriStreamToSize(uri, 200, 100, requireContext())
 
     private fun handleInfoWindowClick(id: String, name: String, latLng: LatLng, address: String) {
         lifecycleScope.launchWhenCreated {

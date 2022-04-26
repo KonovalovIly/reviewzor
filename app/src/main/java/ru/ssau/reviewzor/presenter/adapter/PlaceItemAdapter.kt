@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import ru.ssau.reviewzor.databinding.PlaceItemBinding
 import ru.ssau.reviewzor.decodeUriStreamToSize
 import ru.ssau.reviewzor.domain.entity.PlacesModel
@@ -30,6 +31,8 @@ class PlaceItemAdapter(private val context: Context) :
     override fun onBindViewHolder(holder: PlaceItemViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
+
+    fun getBookmark(position: Int): PlacesModel = getItem(position)
 
     inner class PlaceItemViewHolder(binding: PlaceItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -64,13 +67,10 @@ class PlaceItemAdapter(private val context: Context) :
             }
             Log.d("Logger", item.image.isNotEmpty().toString())
             if (item.image.isNotEmpty()) {
-                val bitmap = getImageWithAuthority(item.image.toUri())
-                imageView.setImageBitmap(bitmap)
+                Log.d("Logger", item.image)
+                imageView.load(item.image)
             }
         }
-
-        private fun getImageWithAuthority(uri: Uri) =
-            decodeUriStreamToSize(uri, 200, 100, context)
     }
 
 }

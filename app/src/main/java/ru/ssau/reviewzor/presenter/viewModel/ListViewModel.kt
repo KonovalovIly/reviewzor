@@ -15,4 +15,10 @@ class ListViewModel(private val repository: BookmarkRepository) : ViewModel() {
             repository.updateBookmark(bookmark)
         }
     }
+
+    fun delete(bookmark: PlacesModel){
+        viewModelScope.launch {
+            repository.deleteBookmark(bookmark)
+        }
+    }
 }

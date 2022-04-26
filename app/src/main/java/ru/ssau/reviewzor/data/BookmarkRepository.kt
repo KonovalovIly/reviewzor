@@ -25,6 +25,10 @@ class BookmarkRepository(private val db: PlaceBookDatabase) {
         return PlacesModel()
     }
 
+    suspend fun deleteBookmark(bookmark: PlacesModel) {
+        db.bookmarkDao().deleteBookmark(bookmark)
+    }
+
     suspend fun updateProfile(profileModel: ProfileModel) {
         db.bookmarkDao().insertProfile(profileModel)
     }

@@ -21,11 +21,14 @@ class DetailViewModel(
     private val _bookmark = MutableLiveData<PlacesModel>()
     val bookmark: LiveData<PlacesModel> = _bookmark
 
+    val imageUrl = MutableLiveData<String>("")
+
     fun sendResponse(name: String) {
         viewModelScope.launch {
             runCatching {
                 repository.getNotes(name)
             }.onSuccess {
+                imageUrl.value = it?.image
                 _bookmark.value = it
             }
         }
@@ -41,7 +44,7 @@ class DetailViewModel(
         val bookmark = _bookmark.value
         if (bookmark != null) {
             viewModelScope.launch {
-                repository.updateBookmark(
+                imageUrl.value?.let {
                     PlacesModel(
                         id = bookmark.id,
                         name = name,
@@ -52,47 +55,24 @@ class DetailViewModel(
                         follow = bookmark.follow,
                         detail = detail,
                         rating = rating,
-                        image = bookmark.image
+                        image = it
                     )
-                )
-            }
-        }
-    }
-
-    fun update(
-        name: String,
-        address: String,
-        category: String,
-        detail: String,
-        rating: Double,
-        image: String
-    ) {
-        val bookmark = _bookmark.value
-        if (bookmark != null) {
-            viewModelScope.launch {
-                repository.updateBookmark(
-                    PlacesModel(
-                        id = bookmark.id,
-                        name = name,
-                        address = address,
-                        category = category,
-                        latitude = bookmark.latitude,
-                        longitude = bookmark.longitude,
-                        follow = bookmark.follow,
-                        detail = detail,
-                        rating = rating,
-                        image = image
+                }?.let {
+                    repository.updateBookmark(
+                        it
                     )
-                )
+                }
             }
         }
     }
 
     fun uploadPhoto(file: File) {
         viewModelScope.launch {
-            kotlin.runCatching { networkRepository.uploadPhoto(file,tokenRepository.getToken())
+            kotlin.runCatching {
+                networkRepository.uploadPhoto(file, tokenRepository.getToken())
             }.onSuccess {
                 Log.d("Logger", it)
+                imageUrl.value = "https://reviewzor-api.herokuapp.com/images/$it"
             }.onFailure {
                 Log.d("Logger", it.message.toString())
             }

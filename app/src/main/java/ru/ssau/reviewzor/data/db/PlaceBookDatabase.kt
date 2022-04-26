@@ -9,7 +9,7 @@ import ru.ssau.reviewzor.domain.entity.PlacesModel
 import ru.ssau.reviewzor.domain.entity.ProfileModel
 
 @Database(
-    entities = [PlacesModel::class, ProfileModel::class], version = 5,
+    entities = [PlacesModel::class, ProfileModel::class], version = 6,
 )
 abstract class PlaceBookDatabase : RoomDatabase() {
 
