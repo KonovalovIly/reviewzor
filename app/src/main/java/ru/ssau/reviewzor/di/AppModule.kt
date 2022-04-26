@@ -2,10 +2,7 @@ package ru.ssau.reviewzor.di
 
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
-import ru.ssau.reviewzor.presenter.viewModel.DetailViewModel
-import ru.ssau.reviewzor.presenter.viewModel.ListViewModel
-import ru.ssau.reviewzor.presenter.viewModel.MapViewModel
-import ru.ssau.reviewzor.presenter.viewModel.ProfileViewModel
+import ru.ssau.reviewzor.presenter.viewModel.*
 
 val appModule = module {
 
@@ -22,6 +19,18 @@ val appModule = module {
     }
 
     viewModel {
-        ProfileViewModel(repository = get())
+        ProfileViewModel(repository = get(), tokenRepository = get())
+    }
+
+    viewModel {
+        RegisterViewModel(repository = get())
+    }
+
+    viewModel {
+        AuthViewModel(repository = get(), tokenRepository = get())
+    }
+
+    viewModel {
+        StartViewModel(repository = get())
     }
 }

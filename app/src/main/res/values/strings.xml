@@ -24,4 +24,7 @@
         <item>Other</item>
     </string-array>
     <string name="profileName">Name:</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="profile_exit">Profile exit</string>
 </resources>

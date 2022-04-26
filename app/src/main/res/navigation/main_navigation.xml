@@ -33,8 +33,8 @@
         android:name="ru.ssau.reviewzor.presenter.screen.RegisterFragment"
         android:label="RegisterFragment" >
         <action
-            android:id="@+id/action_registerFragment_to_mainContainerFragment"
-            app:destination="@id/mainContainerFragment" />
+            android:id="@+id/action_registerFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/mainContainerFragment"

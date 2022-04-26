@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
     tools:context=".presenter.screen.RegisterFragment">
 
     <TextView
         android:id="@+id/register_title"
         android:layout_width="wrap_content"
         android:layout_height="84dp"
-        android:layout_marginTop="136sp"
         android:fontFamily="@font/comfortaa_regular"
         android:text="@string/register_title"
-        android:textSize="50sp"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextEmailAddress"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="50sp" />
 
     <EditText
         android:id="@+id/editTextTextEmailAddress"
@@ -25,10 +22,8 @@
         android:layout_marginTop="44sp"
         android:ems="10"
         android:fontFamily="@font/comfortaa_regular"
-        android:inputType="textEmailAddress"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/register_title" />
+        android:hint="@string/email"
+        android:inputType="textEmailAddress" />
 
     <EditText
         android:id="@+id/editTextTextPassword"
@@ -37,10 +32,8 @@
         android:layout_marginTop="12sp"
         android:ems="10"
         android:fontFamily="@font/comfortaa_regular"
-        android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="@+id/editTextTextEmailAddress"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextEmailAddress"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress" />
+        android:hint="@string/password"
+        android:inputType="textPassword" />
 
     <Button
         android:id="@+id/button"
@@ -49,9 +42,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="10sp"
         android:layout_marginTop="64dp"
-        android:text="@string/register_next_bnt_text"
-        app:layout_constraintEnd_toEndOf="@+id/editTextTextPassword"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextPassword"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
+        android:text="@string/register_next_bnt_text" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

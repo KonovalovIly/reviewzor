@@ -6,6 +6,7 @@ import org.koin.core.context.startKoin
 import ru.ssau.reviewzor.di.appModule
 import ru.ssau.reviewzor.di.dataModule
 import ru.ssau.reviewzor.di.domainModule
+import ru.ssau.reviewzor.di.networkModule
 
 class App : Application() {
 
@@ -13,7 +14,7 @@ class App : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@App)
-            modules(listOf(appModule, dataModule, domainModule))
+            modules(listOf(appModule, dataModule, domainModule, networkModule))
         }
     }
 }

@@ -24,4 +24,7 @@
         <item>Отель</item>
         <item>Другое</item>
     </string-array>
+    <string name="email">Почта</string>
+    <string name="password">Пароль</string>
+    <string name="profile_exit">Выйти из аккаунта</string>
 </resources>

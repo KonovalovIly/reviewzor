@@ -35,6 +35,9 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
             binding.editTextName.setText(it?.name)
             binding.editTextSecondName.setText(it?.secondName)
         }
+        profileViewModel.exit.observe(viewLifecycleOwner) {
+            if (it) activity?.finish()
+        }
     }
 
     private fun setAdapter() {
@@ -56,6 +59,10 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
                     secondName = binding.editTextSecondName.text.toString()
                 )
             )
+        }
+
+        binding.exit.setOnClickListener {
+            profileViewModel.deleteToken()
         }
     }
 
