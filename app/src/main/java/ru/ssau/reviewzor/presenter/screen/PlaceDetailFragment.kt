@@ -7,6 +7,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.core.content.FileProvider
@@ -95,7 +96,6 @@ class PlaceDetailFragment : BaseFragment<FragmentPlaceDetailBinding>(),
                         )
                     }
                 }
-                findNavController().popBackStack()
             }
         }
     }
@@ -156,6 +156,7 @@ class PlaceDetailFragment : BaseFragment<FragmentPlaceDetailBinding>(),
             when (requestCode) {
                 REQUEST_CAPTURE_IMAGE -> {
                     val photoFile = photoFile ?: return
+                    detailViewModel.uploadPhoto(photoFile)
                     val uri = FileProvider.getUriForFile(
                         requireContext(),
                         "ru.ssau.reviewzor.provider",
@@ -170,10 +171,12 @@ class PlaceDetailFragment : BaseFragment<FragmentPlaceDetailBinding>(),
                 REQUEST_GALLERY_IMAGE -> if (data != null && data.data != null) {
                     val imageUri = data.data as Uri
                     val image = getImageWithAuthority(imageUri)
+                    detailViewModel.uploadPhoto(File(data.dataString))
                     image?.let {
                         val bitmap = rotateImageIfRequired(requireContext(), image, imageUri)
                         photoPath = imageUri.toString()
                         updateImage(bitmap)
+                        Log.d("tag", bitmap.convertToByteArray().toString())
                     }
                 }
             }

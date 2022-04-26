@@ -12,6 +12,7 @@ import android.os.Environment
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
+import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -105,3 +106,8 @@ private fun rotateImage(img: Bitmap, degree: Float): Bitmap? {
     img.recycle()
     return rotatedImg
 }
+
+fun Bitmap.convertToByteArray(): ByteArray = ByteBuffer.allocate(byteCount).apply {
+    copyPixelsToBuffer(this)
+    rewind()
+}.array()

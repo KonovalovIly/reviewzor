@@ -1,14 +1,22 @@
 package ru.ssau.reviewzor.presenter.viewModel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.ssau.reviewzor.data.BookmarkRepository
+import ru.ssau.reviewzor.data.NetworkRepository
+import ru.ssau.reviewzor.data.TokenRepository
 import ru.ssau.reviewzor.domain.entity.PlacesModel
+import java.io.File
 
-class DetailViewModel(private val repository: BookmarkRepository) : ViewModel() {
+class DetailViewModel(
+    private val repository: BookmarkRepository,
+    private val networkRepository: NetworkRepository,
+    private val tokenRepository: TokenRepository
+) : ViewModel() {
 
     private val _bookmark = MutableLiveData<PlacesModel>()
     val bookmark: LiveData<PlacesModel> = _bookmark
@@ -76,6 +84,17 @@ class DetailViewModel(private val repository: BookmarkRepository) : ViewModel() 
                         image = image
                     )
                 )
+            }
+        }
+    }
+
+    fun uploadPhoto(file: File) {
+        viewModelScope.launch {
+            kotlin.runCatching { networkRepository.uploadPhoto(file,tokenRepository.getToken())
+            }.onSuccess {
+                Log.d("Logger", it)
+            }.onFailure {
+                Log.d("Logger", it.message.toString())
             }
         }
     }
